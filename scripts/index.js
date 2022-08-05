@@ -26,13 +26,13 @@ function initPayPalButton() {
                 // Full available details
                 console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
                 addCompraEnTabla(orderData);
+                generarActualizarTablaPaypal();
                 /*console.log(orderData.id);
                 console.log(orderData.payer.payer_id);
                 console.log(orderData.payer.email_address);
                 console.log(orderData.payer.address.country_code);
                 console.log(orderData.purchase_units[0].amount.value);
                 console.log(orderData.purchase_units[0].amount.currency_code);
-                STATUS COMPLETED, PERO SE REGISTRA COMO NULL
                 console.log(orderData.purchase_units[0].payments.captures[0].status);*/
                 // Show a success message within this page, e.g.
                 const element = document.getElementById('paypal-button-container');
@@ -58,7 +58,7 @@ function addCompraEnTabla(orderData){
             "paypal_country_code": orderData.payer.address.country_code,
             "paypal_amount": orderData.purchase_units[0].amount.value,
             "paypal_currency": orderData.purchase_units[0].amount.currency_code,
-            "status":orderData.purchase_units[0].payments.captures[0].status
+            "status": orderData.purchase_units[0].payments.captures[0].status
         }
         ),
         headers:{'Content-Type':'application/json'}
