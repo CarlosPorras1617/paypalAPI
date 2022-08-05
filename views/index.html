@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Page Title</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</head>
+
+<body onLoad="generarActualizarTablaPaypal()">
+    <div id="smart-button-container">
+        <div style="text-align: center;">
+            <div id="paypal-button-container"></div>
+        </div>
+    </div>
+
+    <table class="black-text">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Paypal_order_ID</th>
+                <th>paypal_payer_id</th>
+                <th>paypal_payer_email</th>
+                <th>paypal_country_code</th>
+                <th>paypal_amount</th>
+                <th>paypal_currency</th>
+                <th>status</th>
+                <th>created_date</th>
+            </tr>
+        </thead>
+        <tbody id="idBody" style="border: none;">
+
+        </tbody>
+    </table>
+
+
+    <script src="https://www.paypal.com/sdk/js?client-id=AU5qc1M-B4ShH5z7VM9cXDBjG8lgq2mKe9vbxsTLnlCosuE05CwE25aTf39jIY-y2hXwH_wGrq_dKARP&enable-funding=venmo&currency=MXN" data-sdk-integration-source="button-factory"></script>
+    <script src="../scripts/index.js"></script>
+</body>
+
+</html>
