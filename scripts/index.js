@@ -1,4 +1,10 @@
 var api = 'http://localhost:3000/api/paypal-order';
+
+$(document).ready(function(){
+    generarActualizarTablaPaypal();
+    initPayPalButton();
+});
+
 function initPayPalButton() {
     paypal.Buttons({
         style: {
@@ -26,7 +32,6 @@ function initPayPalButton() {
                 // Full available details
                 console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
                 addCompraEnTabla(orderData);
-                generarActualizarTablaPaypal();
                 /*console.log(orderData.id);
                 console.log(orderData.payer.payer_id);
                 console.log(orderData.payer.email_address);
@@ -37,7 +42,10 @@ function initPayPalButton() {
                 // Show a success message within this page, e.g.
                 const element = document.getElementById('paypal-button-container');
                 element.innerHTML = '';
-                element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                element.innerHTML = '<h3>Gracias por su compra!</h3>';
+                $(document).ready(function(){
+                    generarActualizarTablaPaypal();
+                });
                 // Or go to another URL:  actions.redirect('thank_you.html');
             });
         },
@@ -46,7 +54,7 @@ function initPayPalButton() {
         }
     }).render('#paypal-button-container');
 }
-initPayPalButton();
+
 
 function addCompraEnTabla(orderData){
     fetch(api, {
