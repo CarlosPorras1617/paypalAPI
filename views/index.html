@@ -5,13 +5,16 @@
     <title>Page Title</title>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
+    <script src="https://jsuites.net/v4/jsuites.js"></script>
+    <link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css" />
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 
 </head>
+
 
 <body>
     <div id="smart-button-container">
@@ -20,7 +23,18 @@
         </div>
     </div>
 
-    <table class="black-text">
+    <div class="row">
+        <div class="col-md-3">
+            <h4>Date from</h4>
+            <input type="date" class="form-control" id="datefilterfrom" data-date-split-input="true">
+        </div>
+        <div class="col-md-3">
+            <h4>Date to</h4>
+          <input type="date" class="form-control" id="datefilterto" data-date-split-input="true">
+        </div>
+        </div>
+        <a class="waves-effect waves-light btn" id="boton">Filtrar por rango de fechas</a>
+    <table class="black-text" id="testTable">
         <thead>
             <tr>
                 <th>Order ID</th>
@@ -40,6 +54,7 @@
     </table>
 
 
+    
     <script src="https://www.paypal.com/sdk/js?client-id=AU5qc1M-B4ShH5z7VM9cXDBjG8lgq2mKe9vbxsTLnlCosuE05CwE25aTf39jIY-y2hXwH_wGrq_dKARP&enable-funding=venmo&currency=MXN" data-sdk-integration-source="button-factory"></script>
     <script src="../scripts/index.js"></script>
 </body>

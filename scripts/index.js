@@ -1,9 +1,20 @@
 var api = 'http://localhost:3000/api/paypal-order';
 
+$('#boton').click(function () {
+    filterRows();
+    console.log("test")
+ });
+
 $(document).ready(function(){
     generarActualizarTablaPaypal();
     initPayPalButton();
 });
+
+    jSuites.calendar(document.getElementById('calendar'), {
+        type: 'year-month-picker',
+        format: 'MMM-YYYY',
+        validRange: [ '2020-02-01', '2022-12-31' ]
+    });
 
 function initPayPalButton() {
     paypal.Buttons({
@@ -98,7 +109,33 @@ function metodoAppend(doc) {
       '<td>' + doc.paypal_amount + '</td>' +
       '<td>' + doc.paypal_currency + '</td>' +
       '<td>' + doc.status + '</td>' +
-      '<td>' + doc.created_date + '</td>' +
+      '<td>' + moment(new Date(doc.created_date)).format('DD/MM/YYYY') + '</td>' +
       '</tr>'
     )
   }
+
+  
+  function filterRows() {
+    var from = $('#datefilterfrom').val();
+    var to = $('#datefilterto').val();
+  
+    if (!from && !to) { // no value for from and to
+      return;
+    }
+  
+    from = from || '1970-01-01'; // default from to a old date if it is not set
+    to = to || '2999-12-31';
+  
+    var dateFrom = moment(from);
+    var dateTo = moment(to);
+    $('#testTable tr').each(function(i, tr) {
+      var val = $(tr).find("td:nth-child(9)").text();
+      var dateVal = moment(val, "DD/MM/YYYY");
+      var visible = (dateVal.isBetween(dateFrom, dateTo, null, [])) ? "" : "none"; // [] for inclusive
+      $(tr).css('display', visible);
+    });
+  }
+  
+  $('#datefilterfrom').on("change", filterRows);
+  $('#datefilterto').on("change", filterRows);
+
