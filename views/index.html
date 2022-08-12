@@ -5,13 +5,11 @@
     <title>Page Title</title>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!--Esta libreria ni se que onda XD es algo del input calendar-->
     <script src="https://jsuites.net/v4/jsuites.js"></script>
     <link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css" />
     <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 </head>
 
@@ -22,39 +20,70 @@
             <div id="paypal-button-container"></div>
         </div>
     </div>
+    <!--Modal-->
+    <div class="card-panel center">
+        <h3>Transacciones</h3>
+        <!-- Modal Trigger -->
+        <button data-target="demo-modal" class="waves-effect waves-light btn 
+                green darken-1 modal-trigger">Consultar</button>
+        <!-- Modal Structure -->
+        <div id="demo-modal" class="modal modal-fixed-footer" style="width: 75% !important ; height: 75% !important ;">
+            <div class="modal-content">
+                <!--Tabla transacciones-->
+                <div class="row">
+                    <div class="col-md-3">
+                        <h4>Date from</h4>
+                        <input type="date" class="form-control" id="datefilterfrom" data-date-split-input="true">
+                    </div>
+                    <div class="col-md-3">
+                        <h4>Date to</h4>
+                        <input type="date" class="form-control" id="datefilterto" data-date-split-input="true">
+                    </div>
+                </div>
+                <a class="waves-effect waves-light btn 
+                green darken-1 modal-trigger" id="boton">Filtrar por rango de fechas</a>
+                <table class="black-text" id="testTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>ID de Orden</th>
+                            <th>ID Usuario</th>
+                            <th>Email</th>
+                            <th>Codigo Pais</th>
+                            <th>Cantidad</th>
+                            <th>Divisa</th>
+                            <th>Status</th>
+                            <th>Realizado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="idBody" style="border: none;">
+                    <!--Datos de BD-->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <a class="modal-action 
+                    modal-close waves-effect waves-red 
+                    btn red lighten-1">
+                    Close
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--Card de juegos-->
 
     <div class="row">
-        <div class="col-md-3">
-            <h4>Date from</h4>
-            <input type="date" class="form-control" id="datefilterfrom" data-date-split-input="true">
-        </div>
-        <div class="col-md-3">
-            <h4>Date to</h4>
-          <input type="date" class="form-control" id="datefilterto" data-date-split-input="true">
-        </div>
-        </div>
-        <a class="waves-effect waves-light btn" id="boton">Filtrar por rango de fechas</a>
-    <table class="black-text" id="testTable">
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Paypal_order_ID</th>
-                <th>paypal_payer_id</th>
-                <th>paypal_payer_email</th>
-                <th>paypal_country_code</th>
-                <th>paypal_amount</th>
-                <th>paypal_currency</th>
-                <th>status</th>
-                <th>created_date</th>
-            </tr>
-        </thead>
-        <tbody id="idBody" style="border: none;">
+        <div id="catalogoProducts">
 
-        </tbody>
-    </table>
+        </div>
+    </div>
 
-
-    
+    <!--Jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!--Formatear fechas-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="https://www.paypal.com/sdk/js?client-id=AU5qc1M-B4ShH5z7VM9cXDBjG8lgq2mKe9vbxsTLnlCosuE05CwE25aTf39jIY-y2hXwH_wGrq_dKARP&enable-funding=venmo&currency=MXN" data-sdk-integration-source="button-factory"></script>
     <script src="../scripts/index.js"></script>
 </body>
