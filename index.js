@@ -20,6 +20,7 @@ try {
     
     //Routes
     app.use('/api/paypal-order', require('./routes/paypal.routes'));
+    app.use('/api/products', require('./routes/products.routes'));
     
     //Server
     app.listen(port, () => {
@@ -27,5 +28,5 @@ try {
     }); 
 
 } catch (error) {
-    
+    console.log(error);
 }
