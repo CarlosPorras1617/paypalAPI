@@ -1,8 +1,7 @@
 var api = 'http://localhost:3000/api/paypal-order';
 var apiProduts = 'http://localhost:3000/api/products';
-var carrito = 0;
-var finished = false;
-var carritoItems = [];
+var apiKart = 'http://localhost:3000/api/kart';
+var totalPagar;
 
 $('#boton').click(function () {
     filterRows();
@@ -12,25 +11,9 @@ $(document).ready(function () {
     generarActualizarTablaPaypal();
     generarCatalogoProducts();
     initPayPalButton();
+    obtenerKart();
     //pa que jale el modal
     $('.modal').modal();
-    $("#boton-carrito").html(`<i class="material-icons left">shopping_cart</i> Ver carrito (${carrito})`);
-});
-
-$('#boton-carrito').click(function () {
-    $('#carrito-modal').modal();
-    if (carrito == 0){
-        $('#smart-button-container').hide(0);
-    }else{
-        $('#smart-button-container').show(0);
-    }
-});
-
-$('#catalogoProducts').on('click', '#añadirCarroBoton', function() {
-    var product = $('#catalogoProducts').find('h6');
-    carrito+=1;
-    $("#boton-carrito").html(`<i class="material-icons left">shopping_cart</i> Ver carrito (${carrito})`);
-    carritoItems.push()
 });
 
 jSuites.calendar(document.getElementById('calendar'), {
@@ -52,8 +35,8 @@ function initPayPalButton() {
             return actions.order.create({
                 purchase_units: [{
                     "amount": {
-                        "currency_code": "MXN",
-                        "value": 200
+                        "currency_code": "USD",
+                        "value": totalPagar
                     }
                 }]
             });
@@ -65,6 +48,8 @@ function initPayPalButton() {
                 console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
                 //insertamos la compra
                 addCompraEnTabla(orderData);
+                //vacia el carrito
+                eliminarKart();
                 // Show a success message within this page, e.g.
                 const element = document.getElementById('paypal-button-container');
                 element.innerHTML = '';
@@ -135,14 +120,11 @@ function metodoAppend(doc) {
 function filterRows() {
     var from = $('#datefilterfrom').val();
     var to = $('#datefilterto').val();
-
     if (!from && !to) { // no value for from and to
         return;
     }
-
     from = from || '1970-01-01'; // default from to a old date if it is not set
     to = to || '2999-12-31';
-
     var dateFrom = moment(from);
     var dateTo = moment(to);
     $('#testTable tr').each(function (i, tr) {
@@ -168,30 +150,107 @@ function generarCatalogoProducts() {
         }
     })
 }
-function reply_click(elem)
-{
-    var aaaa = elem.parentNode.outerHTML
-    console.log($(aaaa).find('img'))
-    carritoItems.push(elem.parentNode.id)
-    addToCarro($(aaaa).find('h6')[0].innerText,$(aaaa).find('img')[0].currentSrc,$(aaaa).find('p')[0].innerText)
+//añade al carrito
+function addKart(id_product){
+    fetch(apiKart,{
+        method: 'POST',
+        body: JSON.stringify({
+            product_id: id_product,
+            user_id:1,
+            quantity:1
+        }),
+        headers:{
+            "Content-type" : "application/json"
+        }
+    }).then(response => {
+        //console.log(response);
+        if(response.status == 200){
+            M.toast({html: "Agregado al carrito"});
+            obtenerKart();
+        }else{
+            M.toast({response});
+        }
+    }).catch(err => console.log(err));
 }
 
-function addToCarro(id,img,prz){
-    $('#carritoContent').append(
-        '<div class="row s2 m2 l2">'+
-        '<img style="height: 100px; width: 90px; float:left;" src="'+ img +'"> '
-        +'<div class="row s2 m2 l2">'
-        +'<h6 style="float:left; margin-left: 20px;"><strong>'+ id +'</strong></h6> '
-        +'<h6 style="float:right; margin-left: 20px;"><strong>'+ prz +'</strong></h6> '+
+//Trae los productos del carrito
+function obtenerKart() {
+    //mandamos el 1 para indicar el usuario
+    fetch(apiKart + '/1', {
+        method: 'GET'
+    }).then(response => response.json()).then(data => {
+        console.log(apiKart+'/1');
+        console.log(data);
+        totalPagar = 0;
+        if (data.length > 0) {
+            $('#smart-button-container').css('display', 'block');
+            //llenamos la tabla mandando a llamar un metodo
+            $("#tablaKart").empty();
+            data.forEach((doc) => {
+                metodoAppendKart(doc);
+            });
+        }else{
+            $('#totalPagar').text("Total: $" + totalPagar);
+            $("#tablaKart").empty();
+        }
+    })
+}
 
-        '</div>'+
-    '</div>'
-        +'</div>'
-        +'</div>'
+//Eliminar todo el carrito
+function eliminarKart(){
+    fetch(apiKart + '/1',{
+        method: 'DELETE',
+        headers:{
+            "Content-type":"application/json"
+        }
+    }).then(response=>{
+        if (response.status == 200) {
+            //actualizamos el carrito
+            obtenerKart();
+        }else{
+            M.toast({html: "Ocurrio un error"});
+        }
+    })
+}
 
-                
-    )
-}        
+//Eliminar un producto del carrito
+function eliminarProductoKart(id){
+    fetch(apiKart,{
+        method: 'PUT',
+        body: JSON.stringify({
+            //cambia status a 0 para que ya no aparezca en el carrito
+            id: id,
+            status: 0
+        }),
+        headers:{
+            "Content-type":"application/json"
+        }
+    }).then(response=>{
+        if (response.status == 200) {
+            M.toast({html: "Se elimino del carrito"});
+            obtenerKart();
+        }else{
+            M.toast({html: "Ocurrio un error"});
+        }
+    })
+}
+
+//Renderiza la tabla en base a los productos en el carrito
+function metodoAppendKart(doc) {
+    $("#tablaKart").append('<tr>' +
+        '<td>' + doc.name + '</td>' +
+        '<td> <img src="'+ doc.image +'" height="100" widtg="100"></td>' +
+        '<td>' + doc.quantity + '</td>' +
+        '<td>'+'$' + doc.price + '</td>' +
+        '<td><i class="material-icons red-text" onclick="eliminarProductoKart('+doc.id+')">delete</i></td>' +
+        '</tr>'
+    );
+    totalPagar = totalPagar + doc.price;
+    parseFloat(totalPagar).toFixed(2);
+    $('#totalPagar').text("Total: $" + totalPagar);
+    console.log(totalPagar);
+
+}
 
 //Hace las cards de products todo mal estructurado XD
 function metodoAppendProducts(doc){
@@ -203,7 +262,7 @@ function metodoAppendProducts(doc){
                     '<h6><strong>'+ doc.name+'</strong></h6>'+
                     '<p><strong>$'+ doc.price +' USD</strong></p>'+
                     '<button id = "comprarBoton" class="waves-effect waves-light btn-small green" style="margin-bottom: 8px"><i class="material-icons left">payment</i>Comprar</button>'+
-                    '<button id="añadirCarroBoton" onClick="reply_click(this)" class="waves-effect waves-light btn-small red"><i class="material-icons left">shopping_cart</i>Al Carrito</button>'+
+                    '<button id="añadirCarroBoton" onClick="addKart('+doc.id_product+')" class="waves-effect waves-light btn-small red"><i class="material-icons left">shopping_cart</i>Al Carrito</button>'+
                     '</div>'+
                     '<div class="card-content">'+
                     

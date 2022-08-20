@@ -21,7 +21,7 @@ try {
     //Routes
     app.use('/api/paypal-order', require('./routes/paypal.routes'));
     app.use('/api/products', require('./routes/products.routes'));
-    
+    app.use('/api/kart', require('./routes/kart.routes'));
     //Server
     app.listen(port, () => {
         console.log('server on port: ' + port); 
